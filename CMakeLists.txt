@@ -24,6 +24,18 @@ if (WIN32)
 				"${CMAKE_CURRENT_SOURCE_DIR}/windows/x86_64/lib/msvc/swresample.lib"
 				"Bcrypt.lib")
 	endif()
+elseif (IOS)
+	# iOS arm64: libraries built on-demand by libretro/build_ffmpeg_ios.sh.
+	# They are placed under ${CMAKE_BINARY_DIR}/external/ffmpeg/lib so a clean
+	# `rm -rf build/` rebuilds them transparently.
+	set(EKA2L1_FFMPEG_IOS_LIBDIR "${CMAKE_BINARY_DIR}/external/ffmpeg/lib")
+	target_link_libraries(${FFMPEG_CORE_NAME} INTERFACE
+		"${EKA2L1_FFMPEG_IOS_LIBDIR}/libavformat.a"
+		"${EKA2L1_FFMPEG_IOS_LIBDIR}/libavcodec.a"
+		"${EKA2L1_FFMPEG_IOS_LIBDIR}/libswscale.a"
+		"${EKA2L1_FFMPEG_IOS_LIBDIR}/libavutil.a"
+		"${EKA2L1_FFMPEG_IOS_LIBDIR}/libswresample.a"
+		"z")
 elseif (APPLE)
 	target_link_libraries(${FFMPEG_CORE_NAME} INTERFACE
 		"${CMAKE_CURRENT_SOURCE_DIR}/macos/x86_64/lib/libavformat.a"
